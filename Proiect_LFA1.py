@@ -117,7 +117,7 @@ class Automat:
 
         return
 
-    def checkWords(self):
+    def checkWords(self, fisier = ""):
 
         tipAutomat = "AFN" if self.NFA else "AFD"
         print(f"Aici avem un {tipAutomat}.")
@@ -128,15 +128,26 @@ class Automat:
             self.drumCurent = list()
 
             self.DFS(self.stareInit, word)
-            
-            word = u'\u03bB' if word == "" else word
 
             if self.solutii:
+                if fisier != "":
+                    with open(fisier, "a") as output:
+                        output.write(f"Automatul acesta este finit pentru cuvantul {word}!\n")
+                        output.write("Drumurile cu care ajungem in stare finita sunt:\n")
+                        for lista in self.solutii:
+                            for el in lista:
+                                output.write(str(el) + " ")
+                        output.write('\n')
                 print(f"Automatul acesta este finit pentru cuvantul {word}!")
                 print("Drumurile cu care ajungem in stare finita sunt:")
                 for lista in self.solutii:
                     print(*lista)
             else:
+                word = "vid" if word == "" else word
+                if fisier != "":
+                    with open(fisier, "a") as output:
+                        output.write(f"Automatul acesta NU este finit pentru cuvantul {word}!")
+                word = u'\u03bB' if word == "vid" else word
                 print(f"Automatul acesta NU este finit pentru cuvantul {word}!")
 
 
@@ -147,5 +158,5 @@ if __name__ == "__main__":
     x.readAutomat("automat.txt")
     x.readCuvinte("cuvinte.txt")
     #x.printData()
-    x.checkWords()
+    x.checkWords("output.out")
 
