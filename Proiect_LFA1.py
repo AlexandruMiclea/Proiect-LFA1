@@ -1,4 +1,4 @@
-import copy
+﻿import copy
 
 class Automat:
 
@@ -30,6 +30,15 @@ class Automat:
             self.aux = fisierautomat.readlines()
             for i in range(len(self.aux) - 2):
                 l = [x for x in self.aux[i].strip('\n').split()]
+
+                #verificam daca am facut o greseala de redactare
+                if l[0] not in self.stari:
+                    raise ValueError(f"Starea {l[0]} nu este definita!")
+                if l[2] not in self.stari:
+                    raise ValueError(f"Starea {l[2]} nu este definita!")
+                if l[1] not in self.alfabet:
+                    raise ValueError(f"Litera {l[1]} nu este definita!")
+
                 #print(stari.index(l[0]))
                 #print(stari.index(l[2]))
 
@@ -48,9 +57,15 @@ class Automat:
     def readCuvinte(self, fisier):
 
         with open(fisier,"r") as fisiercuv:
-            aux = fisiercuv.readlines()
+            aux = fisiercuv.read().split('\n')
             for cuv in aux:
                 self.cuvinte.append(cuv.strip('\n'))
+
+                litereCuv = set([x for x in cuv.strip('\n')])
+                #print(litereCuv)
+                for el in litereCuv:
+                    if el not in self.alfabet:
+                        raise ValueError(f"Litera {el} nu este definita!")
         
     #afisam datele dupa citire
     def printData(self):
@@ -114,6 +129,8 @@ class Automat:
 
             self.DFS(self.stareInit, word)
             
+            word = u'\u03bB' if word == "" else word
+
             if self.solutii:
                 print(f"Automatul acesta este finit pentru cuvantul {word}!")
                 print("Drumurile cu care ajungem in stare finita sunt:")
@@ -129,6 +146,6 @@ if __name__ == "__main__":
     x = Automat()
     x.readAutomat("automat.txt")
     x.readCuvinte("cuvinte.txt")
-    x.printData()
+    #x.printData()
     x.checkWords()
 
